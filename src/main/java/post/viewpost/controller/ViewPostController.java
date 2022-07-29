@@ -1,6 +1,7 @@
 package post.viewpost.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import comment.service.CommentService;
+import comment.vo.Comment;
 import post.service.PostService;
 import post.vo.Post;
 import user.vo.User;
@@ -45,9 +48,13 @@ public class ViewPostController extends HttpServlet {
 		service.upViewCount(post, user);
 
 		if(post != null) {			
+			CommentService cservice = new CommentService();
+			ArrayList<Comment> comment = cservice.loadAllComment(post);
+			
 			RequestDispatcher rd = request.getRequestDispatcher("/viewpost/viewpost.jsp");
 			session.setAttribute("user", user);
 			request.setAttribute("post", post);
+			request.setAttribute("comment", comment);
 			rd.forward(request, response);
 		} else {
 			response.sendRedirect("/freeboard/main/index.jsp");

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
-    import="java.util.*, user.vo.*, post.vo.*"%>
+    import="java.util.*, user.vo.*, post.vo.*, comment.vo.*"%>
 
 <!doctype html>
 <html lang="en">
@@ -79,6 +79,8 @@
 	      <%
 			User user = (User)session.getAttribute("user");
     		Post post = (Post)request.getAttribute("post");
+    		ArrayList<Comment> comment = (ArrayList<Comment>)request.getAttribute("comment");
+    		
     		session.setAttribute("user", user);
 		  %>
 	      	<div class="input-group mt-3">
@@ -101,17 +103,46 @@
 	  		</div>
 	  		
 	  		<div class="text-end m-4">
-	  			<span class="">작성일 <%= post.getPdate() %></span>
+	  			<span>작성일 <%= post.getPdate() %></span>
 	  		</div>
-	  	</form> 
-	  		<%
-	  			if(user.getUid().equals(post.getPwriter())) {
-	  		%>
-  				<div class="text-end m-4">
-  					<a href="/freeboard/modifypost?modifypid=<%= post.getPid() %>" class="btn btn-dark mt-3">수정</a>
-  					<a href="/freeboard/deletepost?delpid=<%= post.getPid() %>" class="btn btn-dark mt-3">삭제</a>
-		    	</div>  
-	  		<% } %>
+	  	</form>
+	  	
+	  	<div class="my-3 p-3 bg-body rounded shadow-sm">
+		    <h6 class="border-bottom pb-2 mb-0">댓글</h6>
+		    <%
+		    	if(comment != null) {
+		    		for(Comment com : comment) {	
+		    %>	
+		    			<div class="input-group mt-3">
+				    		<span class="input-group-text"><%= com.getCwriter() %></span>
+				    		<input type="text" class="form-control" name="pwriter" value="<%= com.getCcontent() %>"readonly>				  			
+	   		<%
+	   					if(com.getCwriter().equals(user.getUid())) {
+	   		%>		
+	   					  	<input type="button" class="btn btn-primary" value="수정">
+	   					  	<input type="button" class="btn btn-danger" value="삭제">					      	     							 				  
+		   			<% } %>	
+		   			</div>	   				
+	    		  <% } %>
+		    <% } %>
+		    
+		</div>
+		<form action="/freeboard/writecomment" method="POST">
+			<div class="input-group mb-3">
+				<input type="text" name="pid" hidden="true">
+ 				<input type="text" name="ccontent" class="form-control" placeholder="댓글 입력">
+				<button class="btn btn-success" type="submit">입력</button>
+	  		</div>
+		</form>
+		
+ 		<%
+  			if(user.getUid().equals(post.getPwriter())) {
+  		%>
+			<div class="text-end m-4">
+				<a href="/freeboard/modifypost?modifypid=<%= post.getPid() %>" class="btn btn-dark mt-3">수정</a>
+				<a href="/freeboard/deletepost?delpid=<%= post.getPid() %>" class="btn btn-dark mt-3">삭제</a>
+	    	</div>  
+  		<% } %>
     </main>
   </div>
 </div>
