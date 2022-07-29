@@ -7,7 +7,7 @@
 		driverClass="com.mysql.jdbc.Driver"
 		url="jdbc:mysql://localhost:3306/freeboard"
 		username="root"
-		password="thdus968319"
+		password="password"
 		factory="org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory"
 		maxAlive="500"
 		/>
